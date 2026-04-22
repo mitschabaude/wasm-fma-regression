@@ -1,0 +1,22 @@
+{
+  "name": "wasm-fma-regression",
+  "private": true,
+  "type": "module",
+  "description": "Minimal repro for a V8 wasm relaxed-SIMD FMA performance regression (Node 23 → Node 24 / V8 12.9 → V8 13.6)",
+  "scripts": {
+    "bench": "node --experimental-strip-types repro.ts",
+    "bench-d8-old": "~/.jsvu/bin/v8-12.9.202 harness.js",
+    "bench-d8-new": "~/.jsvu/bin/v8-13.6.233 harness.js",
+    "bench-d8-latest": "~/.jsvu/bin/v8 harness.js",
+    "disasm-old": "mkdir -p dump && ~/.jsvu/bin/v8-debug-12.9.202 --no-liftoff --print-wasm-code harness.js > dump/v8-12.9-turbofan.asm 2>&1 && echo 'wrote dump/v8-12.9-turbofan.asm'",
+    "disasm-new": "mkdir -p dump && ~/.jsvu/bin/v8-debug-13.6.233 --no-liftoff --print-wasm-code harness.js > dump/v8-13.6-turboshaft.asm 2>&1 && echo 'wrote dump/v8-13.6-turboshaft.asm'",
+    "disasm-both": "npm run disasm-old && npm run disasm-new",
+    "jsvu-install": "jsvu --os=linux64 v8@12.9.202 v8@13.6.233 v8 v8-debug@12.9.202 v8-debug@13.6.233"
+  },
+  "dependencies": {
+    "wasmati": "^0.2.2"
+  },
+  "devDependencies": {
+    "jsvu": "^2.2.0"
+  }
+}
